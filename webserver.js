@@ -9,7 +9,8 @@ const mimeTypes = {
   'js': 'text/javascript',
   'css': 'text/css',
   'html': 'text/html',
-  'png': 'image/png'
+  'png': 'image/png',
+  'ttf': 'font/ttf'
 }
 
 const server = http.createServer((req, res) => {
@@ -19,8 +20,10 @@ const server = http.createServer((req, res) => {
     res.end();
     return;
   }
+  console.log(path.join(filePath, 'index.html'));
   if (req.url == '/') {
     fs.readFile(path.join(filePath, 'index.html'), (err, content) => {
+      
     res.writeHead(200, { 'Content-Type': mimeTypes['html']});
     res.end(content, 'utf-8');
     })

@@ -1,10 +1,15 @@
 import GameScene from './scenes/GameScene.js';
+import GameOverScene from './scenes/GameOverScene.js';
+import MainMenuScene from './scenes/MainMenuScene.js';
+import HighScoreScene from './scenes/HighScoreScene.js';
 
 
 const gameOptions = {
   playerGravity: 500,
   playerSpeed: 200
 }
+
+
 
 const config = {
   type: Phaser.AUTO,
@@ -24,7 +29,7 @@ const config = {
       }
     }
   },
-  scene: [GameScene]
+  scene: [MainMenuScene ,GameScene, GameOverScene, HighScoreScene]
 };
 
 export default new Phaser.Game(config);
