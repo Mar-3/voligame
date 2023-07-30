@@ -19,19 +19,18 @@ export default class HighScoreScene extends Phaser.Scene {
   constructor() {
     super("highscore-scene");
   }
-
+ // During init, get the new score data if there is a new highscore.
   init(data) {
     this.hiscores = JSON.parse(localStorage.getItem('hiscores'));
     let newScore = data.score;
-    if (newScore > this.hiscores.at(-1).score) {
+    this.newHighScore = 0;
+    console.log(newScore, this.hiscores.at(-1).score)
+    if (newScore > parseInt(this.hiscores.at(-1).score)) {
       this.newHighScore = newScore;
-    }
+    } 
   }
  
   
-  preload() {
-    this.cursors = this.input.keyboard;
-  }
   create() {
     this.cursors = this.input.keyboard.createCursorKeys();
     
@@ -55,7 +54,6 @@ export default class HighScoreScene extends Phaser.Scene {
   }
 
   update() {
-    console.log(this.newHighScore);
     if (this.newHighScore > 0) {
       this.selector.visible = true;
       this.inputName();
@@ -100,7 +98,7 @@ export default class HighScoreScene extends Phaser.Scene {
         nameInput = nameInput.concat(char)
       )
 
-    
+    // print keyboard
     this.visibleText.forEach(text => text.destroy());
     this.visibleText.push(
       this.add.text(50,10, 'NEW SCORE: ' + this.newHighScore)
@@ -137,6 +135,7 @@ export default class HighScoreScene extends Phaser.Scene {
     });
   }
 
+  // Submit new high score adn name
   submitScore() {
     console.log('submit')
     let nameInput = '';
@@ -145,14 +144,18 @@ export default class HighScoreScene extends Phaser.Scene {
       )
     let newScore = this.newHighScore;
 
-    let index = this.hiscores.findIndex((score) => score.score < newScore);
-    console.log(index, newScore);
-    this.hiscores[index] = {name:nameInput, score:newScore};
+    // Find out which rank the new score is, then push to high scores
+    // array to that index and delete the lowest score.
+    let index = this.hiscores.findIndex((score) => parseInt(score.score) < newScore);
+    this.hiscores.splice(index, 0,{name:nameInput, score:newScore});
+    this.hiscores.sort((a,b) => {return b.score-a.score});
+    this.hiscores.pop();
     console.log(this.hiscores)
     this.updateHiscoresStorage();
     this.newHighScore = 0;
   }
 
+  // Save high scores to local storage
   updateHiscoresStorage() {
     localStorage.setItem('hiscores', JSON.stringify(this.hiscores));
   }

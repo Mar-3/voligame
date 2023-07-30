@@ -2,6 +2,8 @@ import GameScene from './scenes/GameScene.js';
 import GameOverScene from './scenes/GameOverScene.js';
 import MainMenuScene from './scenes/MainMenuScene.js';
 import HighScoreScene from './scenes/HighScoreScene.js';
+import BossCinematic from './scenes/bossCinematicScene.js';
+import ManualScene from './scenes/ManualScene.js';
 
 
 const gameOptions = {
@@ -29,7 +31,7 @@ const config = {
       }
     }
   },
-  scene: [MainMenuScene ,GameScene, GameOverScene, HighScoreScene]
+  scene: [MainMenuScene ,GameScene, GameOverScene, HighScoreScene, BossCinematic, ManualScene]
 };
 
 export default new Phaser.Game(config);

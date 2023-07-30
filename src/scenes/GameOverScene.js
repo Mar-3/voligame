@@ -14,13 +14,13 @@ export default class GameOver extends Phaser.Scene {
   }
   
   preload() {
-    
+    this.load.audio('gameoversound', ['../assets/audio/game-over.mp3']);
   }
   create() {
     this.cursors = this.input.keyboard.createCursorKeys();
     this.add.text(75,50, 'GAME OVER');
     this.add.text(85,80,'Score:' + this.data.score);
-    this.events.emit('postScore', this.data.score);
+    this.sound.add('gameoversound').play();
   }
   
   update() {

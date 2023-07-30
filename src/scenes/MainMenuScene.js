@@ -33,8 +33,8 @@ export default class MainMenuScene extends Phaser.Scene {
   preload() {
 
     this.cursors = this.input.keyboard;
-    this.load.image('button', 'assets/button.png');
-    this.load.image('bone', 'assets/hp.png');
+    this.load.image('button', 'assets/img/button.png');
+    this.load.image('bone', 'assets/img/hp.png');
     
   }
   create() {

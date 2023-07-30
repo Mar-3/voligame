@@ -11,11 +11,26 @@ const HPUP_KEY = 'hpup';
 const CAR_KEY = 'car';  
 const UFO_KEY = 'ufo';
 const UFOPROJECTILE_KEY = 'ufoProjectile';
-const BITE_KEY = 'bite';
+const BOSSPROJECTILE_KEY = 'bossprojectile';
 const CAT_KEY = 'cat';
 const TREAT_KEY = 'treat';
 const JETPACK_KEY = 'jetpack';
 const BIGTREAT_KEY = 'bigtreat';
+const CATBOSS_KEY = 'catboss';
+const BOSSHP_KEY = 'bosshp'
+const MAINMUSIC_KEY = 'mainmusic';
+const BOSSMUSIC_KEY = 'bossmusic';
+const PLAYERHITSOUND_KEY = 'playerhit';
+const PLAYERDIESOUND_KEY = 'playerdiesound';
+const PLUCKSOUND_KEY = 'plucksound';
+const JETPACKSOUND_KEY = 'jetpacksound';
+const POWERUPSOUND_KEY = 'powerupsound';
+const DRAMATICSOUND_KEY = 'dramaticsound';
+const BOSSATTACKSOUND_KEY = 'bossattacksound';
+const VICTORYSOUND_KEY = 'victorysound';
+const PICKUPSOUND_KEY = 'pickupsound';
+const LASERSOUND_KEY = 'lasersound';
+
 
 
 export default class PlayGame extends Phaser.Scene {
@@ -37,11 +52,11 @@ export default class PlayGame extends Phaser.Scene {
   enemySpawnWeights = [
     {
       enemy:'biker',
-      weight: 0.2
+      weight: 0.15
     },
     {
       enemy: 'car',
-      weight: 0.35
+      weight: 0.30
     },
     {
       enemy: 'ufo',
@@ -49,23 +64,23 @@ export default class PlayGame extends Phaser.Scene {
     },
     {
       enemy: 'cat',
-      weight: 0.25
+      weight: 0.35
     }
   ];
-  enemySpawnWeightsCumulative = []
   
+  enemySpawnWeightsCumulative = [];
   pickupSpawnWeights = [
     {
       pickup: 'hpup',
-      weight: 0.2
+      weight: 0.18
     },
     {
       pickup: 'jetpack',
-      weight: 0.05
+      weight: 0.015
     },
     {
       pickup: 'treat',
-      weight: 0.6
+      weight: 0.655
     },
     {
       pickup: 'bigtreat',
@@ -74,6 +89,7 @@ export default class PlayGame extends Phaser.Scene {
   ]
   pickupSpawnWeightsCumulative = [];
   jetPackMeter;
+  jetPackActive = false;
   spawnEnemyTimer;
   spawnPickupTimer;
   scorePopups = [];
@@ -85,68 +101,90 @@ export default class PlayGame extends Phaser.Scene {
   bgGroupMedium = [];
   bgGroupSlow = [];
   lamp;
-  enemiesGroup = []
-  enemySpawnRate = 0.9;
+  enemiesGroup = [];
+  enemySpawnRate = 1.0;
+  pickupSpawnRate = 1.0;
 
-;
+  // Cat boss variables
 
+  bossFightOn = false;
+  bossCurrentPhase;
+  bossPhaseTimer;
+  bossAttackTimer;
+  bossHPGroup = [];
+  catboss;
   preload() {
     this.score = 0;
     this.speedMultiplier = 1;
   
-  
-    this.load.image(GROUND_KEY, '../assets/ground.png');
-    this.load.image(GROUNDBG_KEY, '../assets/groundbg.png');
-    this.load.image(SPRUCE_KEY, '../assets/spruce.png');
-    this.load.image(YARD1_KEY, '../assets/yard1.png');
-    this.load.image(FENCE_KEY, '../assets/fence.png');
-    this.load.image(LAMP_KEY, '../assets/lamp.png');
-    this.load.image(HP_KEY, '../assets/hp.png');
-    this.load.image(TREAT_KEY, '../assets/treat.png');
-    this.load.image(JETPACK_KEY, '../assets/jetpack.png');
-    this.load.image(HPUP_KEY, '../assets/hpUp.png');
-    this.load.image(BIGTREAT_KEY, '../assets/bigtreat.png');
+    // Loading images and spritsheets
+    this.load.image(GROUND_KEY, '../assets/img/ground.png');
+    this.load.image(GROUNDBG_KEY, '../assets/img//groundbg.png');
+    this.load.image(SPRUCE_KEY, '../assets/img/spruce.png');
+    this.load.image(YARD1_KEY, '../assets/img/yard1.png');
+    this.load.image(FENCE_KEY, '../assets/img/fence.png');
+    this.load.image(LAMP_KEY, '../assets/img/lamp.png');
+    this.load.image(HP_KEY, '../assets/img/hp.png');
+    this.load.image(TREAT_KEY, '../assets/img/treat.png');
+    this.load.image(JETPACK_KEY, '../assets/img/jetpack.png');
+    this.load.image(HPUP_KEY, '../assets/img/hpUp.png');
+    this.load.image(BIGTREAT_KEY, '../assets/img/bigtreat.png');
+    this.load.image(BOSSHP_KEY, '../assets/img/bosshp.png');
 
 
     this.load.spritesheet(VOLI_KEY,
-      'assets/voli_sprite.png',
+      'assets/img/voli_sprite.png',
       { frameWidth: 42, frameHeight: 28});
 
-    this.load.spritesheet(BITE_KEY,
-      'assets/bite.png',
-      { frameWidth: 5, frameHeight: 10});
-
     this.load.spritesheet(BIKER_KEY,
-      'assets/spandex.png',
+      'assets/img/spandex.png',
       { frameWidth: 48, frameHeight: 36});
 
       this.load.spritesheet(CAR_KEY,
-        'assets/car.png',
+        'assets/img/car.png',
         { frameWidth: 136/2, frameHeight: 31});
       
       this.load.spritesheet(UFO_KEY,
-        'assets/ufo.png',
+        'assets/img/ufo.png',
         { frameWidth: 120/4, frameHeight: 19});
 
       this.load.spritesheet(UFOPROJECTILE_KEY,
-        'assets/ufoProjectile.png',
+        'assets/img/ufoProjectile.png',
         { frameWidth: 6, frameHeight: 8});
         
         this.load.spritesheet(CAT_KEY,
-          'assets/cat.png',
+          'assets/img/cat.png',
           { frameWidth: 25, frameHeight: 24});
 
+        this.load.spritesheet(CATBOSS_KEY,
+          '../assets/img/catboss.png',
+          { frameWidth: 35, frameHeight:70});
+    
+        this.load.spritesheet(BOSSPROJECTILE_KEY,
+          '../assets/img/bossprojectile.png',
+          { frameWidth: 5, frameHeight:10});
+
+    this.load.audio(MAINMUSIC_KEY, ['../assets/audio/main-music.mp3']);
+    this.load.audio(BOSSMUSIC_KEY, ['../assets/audio/boss-music.mp3']);
+    this.load.audio(PLUCKSOUND_KEY, ['../assets/audio/pluck.mp3']);
+    this.load.audio(VICTORYSOUND_KEY, ['../assets/audio/victory.mp3']);
+    this.load.audio(DRAMATICSOUND_KEY, ['../assets/audio/dramatic.mp3']);
+    this.load.audio(PLAYERDIESOUND_KEY, ['../assets/audio/player-die.mp3']);
+    this.load.audio(PLAYERHITSOUND_KEY, ['../assets/audio/player-hit.mp3']);
+    this.load.audio(JETPACKSOUND_KEY, ['../assets/audio/jetpack.mp3']);
+    this.load.audio(PICKUPSOUND_KEY, ['../assets/audio/pickup.mp3']);
+    this.load.audio(POWERUPSOUND_KEY, ['../assets/audio/powerup.mp3']);
+    this.load.audio(BOSSATTACKSOUND_KEY, ['../assets/audio/boss-attack-1.mp3']);
+    this.load.audio(LASERSOUND_KEY, ['../assets/audio/ufo-shoot.mp3']);
   }
 
   create() {
-
-    this.add.graphics().slice(100,100,Math.PI/4, Math.PI*2, true)
-    .fillStyle(0xf00000, 1).fillPath();
-
     this.isGameOver = false;
     this.createBg();
     this.createPlatform();
     this.createPlayer();
+
+    // Reset spawntimers
     this.spawnEnemyTimer = this.time.addEvent({
       delay: 1000, timeScale: 1.0
     });
@@ -161,18 +199,50 @@ export default class PlayGame extends Phaser.Scene {
     this.score = this.add.text(40,0, 0).setDepth(2);
     this.enemiesGroup = [];
 
+    this.createBossAnims();
 
     this.cursors = this.input.keyboard.createCursorKeys();
+    this.createAudio();
+
+    this.mainmusic.play({loop: true});
+    this.checkSkips();
+    
   }
 
-  createHP() {
+  createAudio() {
+    this.mainmusic = this.sound.add(MAINMUSIC_KEY);
+    this.pickupsound = this.sound.add(PICKUPSOUND_KEY);
+    this.bossmusic = this.sound.add(BOSSMUSIC_KEY);
+    this.dramaticsound = this.sound.add(DRAMATICSOUND_KEY);
+    this.plucksound = this.sound.add(PLUCKSOUND_KEY);
+    this.powerupsound = this.sound.add(POWERUPSOUND_KEY);
+    this.jetpacksound = this.sound.add(JETPACKSOUND_KEY);
+    this.bossattacksound = this.sound.add(BOSSATTACKSOUND_KEY); 
+    this.playerhitsound = this.sound.add(PLAYERHITSOUND_KEY);
+    this.playerdiesound = this.sound.add(PLAYERDIESOUND_KEY);
+    this.lasersound = this.sound.add(LASERSOUND_KEY);
+  }
+
+  checkSkips() { //check for boss or jetpack skip for testing
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    if (urlParams.has('skiptoboss')) {
+      this.startBossFight();
+    }
+    if (urlParams.has('spawnjetpack')) {
+      this.spawnJetpack();
+    }
+
+  }
+
+  createHP() { // Create and draw player's HP
     for (let i = 0; i < 3; i++) {
       this.hpGroup.push(this.add.image(10+this.hpGroup.length*4,10, HP_KEY).setDepth(2));
     }
   }
 
   
-  createBg() {
+  createBg() { // Create the scrolling parallax backgrounds
     this.bgGroupSlow.push(this.add.tileSprite(125, 65,
       250,100, YARD1_KEY)); 
 
@@ -186,7 +256,7 @@ export default class PlayGame extends Phaser.Scene {
       250,25, FENCE_KEY));
   }
 
-  createPlatform() {
+  createPlatform() { // Create the ground platform and lamp platforms
     this.platform = this.physics.add.sprite(125,135).setImmovable().setCollideWorldBounds(true);
     this.platform.setPushable(false);
     this.platform.setSize(250,1);
@@ -200,7 +270,7 @@ export default class PlayGame extends Phaser.Scene {
     this.lamp.body.setOffset(2,5);
   }
 
-  createPlayer() {
+  createPlayer() { // Creates the player sprite, physics, and animations
     this.player = this.physics.add.sprite(30,100, VOLI_KEY);
     this.player.setBounce(0.2);
     this.player.setGravity(0,500);
@@ -230,13 +300,7 @@ export default class PlayGame extends Phaser.Scene {
         frameRate: 7,
         repeat: -1
     });
-    this.anims.create({
-      key: 'bite',
-      frames: this.anims.generateFrameNumbers(BITE_KEY,
-        {start:0, end:2}),
-        frameRate: 4,
-        repeat: 1
-      });
+    
     this.anims.create({
       key: 'jetpack',
       frames: this.anims.generateFrameNumbers(VOLI_KEY,
@@ -307,7 +371,49 @@ export default class PlayGame extends Phaser.Scene {
  
   }
 
-  createEnemySpawnWeights() {
+  createBossAnims() {
+    this.anims.create({
+      key:'bossWalk',
+      frames: this.anims.generateFrameNumbers(CATBOSS_KEY,
+        {start:0, end:1}),
+        frameRate: 5,
+        repeat: -1
+    });
+    this.anims.create({
+      key:'bossCallUfo',
+      frames: this.anims.generateFrameNumbers(CATBOSS_KEY,
+        {start:2, end:2}),
+        frameRate: 10,
+        repeat: -1
+    });
+    this.anims.addMix('bossCallUfo', 'bossWalk', 1000);
+
+    this.anims.create({
+      key: 'bossTailAttack',
+      frames: this.anims. generateFrameNumbers(CATBOSS_KEY,
+        {start:3, end: 4}),
+        frameRate:3,
+        repeat:-1
+    });
+    this.anims.addMix('bossTailAttack', 'bossWalk', 1500);
+
+    this.anims.create({
+      key: 'bossRest',
+      frames: this.anims. generateFrameNumbers(CATBOSS_KEY,
+        {start:5, end: 5}),
+        frameRate:5,
+        repeat:-1
+    });
+    this.anims.create({
+      key: 'bossShockwave',
+      frames: this.anims.generateFrameNumbers(BOSSPROJECTILE_KEY,
+        {start:0, end:2}),
+        frameRate: 5,
+        repeat: -1
+      });
+  };
+
+  createEnemySpawnWeights() { // Calculate cumulative weight table to randomize spawns
     let sum = 0;
     this.enemySpawnWeights.forEach((item) => {
       sum += item.weight;
@@ -315,7 +421,7 @@ export default class PlayGame extends Phaser.Scene {
     });
   }
 
-  createPickupSpawnWeights() {
+  createPickupSpawnWeights() { // Calculate cumulative weight table to randomize spawns
     let sum = 0;
     this.pickupSpawnWeights.forEach((item) => {
       sum += item.weight;
@@ -326,36 +432,69 @@ export default class PlayGame extends Phaser.Scene {
   update()
   {
     this.moveBackground();
-
-    this.spawnEnemies();
-
+    
+    // Boss fight check, spawn enemies and pickups
+    // only when bossfight is not on,
+    // otherwise run boss fight logic
+    if (this.bossFightOn) {
+      this.checkBossPhase();
+    } else {
+      this.spawnEnemies();
+      this.spawnPickups();
+    }
 
     if (!this.isGameOver) {
-      this.spawnPickups();
+      if (!this.bossFightOn) {
+        this.updateScore(1)
       
+      // Check if enough points for bossfight
+      if (this.score._text > 20000 && this.score._text < 24999) {
+        this.startBossFight();
+      }};
+      // Increase game speed and difficulty when points increase
+      if ((3000 + this.speedMultiplier*20000) < this.score._text) {
+        this.speedMultiplier += 0.1;
+        this.enemySpawnRate += 0.05;
+        this.pickupSpawnRate -= 0.05;
+        this.newScorePopup(100,30, 'Difficulty up!!', {color: 0xff0000});
+      };
+
+      
+      
+      // Manage popups
       this.checkScorePopups();
-      this.updateScore(1);
+
+      // player controls
       if (this.cursors.right.isDown) {
         this.player.setVelocityX(160);
-
       } else if (this.cursors.left.isDown) {
         this.player.setVelocityX(-160)
       } else {
         this.player.setVelocityX(0);
       };
-
-      if (this.cursors.up.isDown && this.player.body.touching.down) {
+      if ((this.cursors.up.isDown || this.cursors.space.isDown) && this.player.body.touching.down) {
         this.player.setVelocityY(-250);
+        this.plucksound.play();
+        
         };
-      if (this.playerInvincible) {
+
+      // Update cycle when jetpack active
+      if (this.jetPackActive) {
         if (this.invincibleTimer.getProgress() == 1) {
           this.jetpackEnd();
         }
         this.drawJetpackMeter();
+      } else if (this.playerInvincible) {
+        if (this.invincibleTimer.getProgress() == 1) {
+          this.playerInvincible = false;
+        }
       }
   } else {
+    // If game is over and game over timer is done,
+    // go to game over scene
     if (this.gameOverTimer.getProgress() == 1) {
       this.gameOverTimer = undefined;
+      this.scene.stop('game-scene');
       this.scene.start('gameover-scene', {score:this.score._text});
     }
   }}
@@ -391,6 +530,7 @@ export default class PlayGame extends Phaser.Scene {
 
   checkScorePopups() {
     if (this.scorePopups.length == 0) {
+
       return
     }
 
@@ -403,7 +543,9 @@ export default class PlayGame extends Phaser.Scene {
 
   spawnEnemies() {
 
-    if (this.spawnEnemyTimer.getProgress() == 1){
+    if (this.spawnEnemyTimer.getProgress() == 1 && !this.bossFightOn){
+      
+      this.ufoShoot();
       let random = Math.random();
       let enemyIndex = this.enemySpawnWeightsCumulative.findIndex(weight => 
         weight>=random);
@@ -429,13 +571,8 @@ export default class PlayGame extends Phaser.Scene {
         default:
           console.log('unknown enemy');
       }
-      this.enemiesGroup.forEach(enemy => {
-        if (enemy.texture.key == UFO_KEY) {
-          this.ufoShoot(enemy);
-        }
-      })
       this.spawnEnemyTimer.reset({
-        delay: (Math.random()*2000+ 500),
+        delay: (Math.random()*2000+ 700),
         timeScale:this.enemySpawnRate
       });
     }
@@ -481,11 +618,11 @@ export default class PlayGame extends Phaser.Scene {
       }))
   }
 
-  spawnCat() {
+  spawnCat(offSetX=0, offSetY=0, offSetAngle=1) {
     let yrandom = 80 + Math.random()*50;
   
-    const newCat =this.physics.add.sprite(320,145, CAT_KEY)
-    .setVelocityX(-yrandom).setVelocityY(-yrandom* this.speedMultiplier).anims.play('cat', true).setGravity(0, 60)
+    const newCat =this.physics.add.sprite(320+offSetX,145+offSetY, CAT_KEY)
+    .setVelocityX(-yrandom).setVelocityY(-yrandom * offSetAngle * this.speedMultiplier).anims.play('cat', true).setGravity(0, 60)
     .setRotation(-(Math.PI/4))
     .setSize(10,10, true);
 
@@ -499,23 +636,28 @@ export default class PlayGame extends Phaser.Scene {
     this.enemiesGroup.push(newCat);
   }
 
-  ufoShoot(ufo) {
-    ufo.anims.play('ufoShoot', true);
-    ufo.anims.play('ufoMove', true);
-    let ufoProjectile = this.physics.add.sprite(0,0, UFOPROJECTILE_KEY).copyPosition(ufo).setOffset(0,15);
-    ufoProjectile.anims.play('ufoProjectile');
-    ufoProjectile.setVelocityY(100* this.speedMultiplier);
-    ufoProjectile.setSize(4, 6, true);
-    this.physics.add.collider(this.player, ufoProjectile, (obj1, obj2) => {
-      obj2.destroy();
-      this.loseHp();
-    });
-    this.enemiesGroup.push(ufoProjectile);
+  ufoShoot() {
+    this.enemiesGroup.forEach(ufo => {
+      if (ufo.texture.key == UFO_KEY) {
+        ufo.anims.play('ufoShoot', true);
+        ufo.anims.play('ufoMove', true);
+        let ufoProjectile = this.physics.add.sprite(0,0, UFOPROJECTILE_KEY).copyPosition(ufo).setOffset(0,15);
+        ufoProjectile.anims.play('ufoProjectile');
+        ufoProjectile.setVelocityY(100* this.speedMultiplier);
+        ufoProjectile.setSize(4, 6, true);
+        this.physics.add.collider(this.player, ufoProjectile, (obj1, obj2) => {
+          obj2.destroy();
+          this.loseHp();
+        });
+        this.enemiesGroup.push(ufoProjectile)
+      }
+    })
+;
   }
 
   spawnPickups() {
 
-    if (this.spawnPickupTimer.getProgress() == 1){
+    if (this.spawnPickupTimer.getProgress() == 1 && !this.bossFightOn){
       let random = Math.random();
       let pickupIndex = this.pickupSpawnWeightsCumulative.findIndex(weight => 
         weight>=random);
@@ -571,6 +713,7 @@ export default class PlayGame extends Phaser.Scene {
         obj1.destroy();
         this.newScorePopup(obj1.x, obj1.y, 300);
         this.updateScore(300);
+        this.pickupsound.play();
       }
     ))
   } 
@@ -585,6 +728,7 @@ export default class PlayGame extends Phaser.Scene {
         obj1.destroy();
         this.newScorePopup(obj1.x, obj1.y, 1000);
         this.updateScore(1000);
+        this.pickupsound.play();
       }
     ))
   }
@@ -609,6 +753,11 @@ export default class PlayGame extends Phaser.Scene {
 
 
   destroyAnimation(object) {
+    if (this.playerInvincible) {
+      this.pickupsound.play();
+      this.newScorePopup(this.player.x,this.player.y,200);
+      this.updateScore(200);
+    }
 
     let deathSprite = this.physics.add.sprite(0,0, object.texture.key).copyPosition(object);
     object.destroy();
@@ -620,42 +769,48 @@ export default class PlayGame extends Phaser.Scene {
 
   loseHp() {
     if (!this.playerInvincible) {
+      
+      this.playerhitsound.play();
       this.player.anims.play('idle', true);
       this.player.anims.play('right', true);
       this.hpGroup.at(-1).destroy();
       this.hpGroup.pop();
       if (this.hpGroup.length <= 0) {
+        this.sound.stopAll();
+        this.playerdiesound.play();
         this.gameOver();
     }
-    } else {
-      this.newScorePopup(this.player.x,this.player.y,200);
-      this.updateScore(200);
     }
   };
 
   gainHp() {
-    if (this.hpGroup.length <= 5) {
+    if (this.hpGroup.length < 5) {
+      this.powerupsound.play();
       this.newScorePopup(this.player.x, this.player.y, 'HP UP');
       this.hpGroup.push(this.add.image(10+this.hpGroup.length*4,10, HP_KEY).setDepth(2));
     }
   }
 
-  jetPack() {
-    this.playerInvincible = 1;
-    this.speedMultiplier = 4;
-    this.enemySpawnRate = 4.0;
+  jetPack() { // Initiate jetpack logic, increases speed and makes player invincible a time
+    this.playerInvincible = true;
+    this.jetPackActive = true;
+    this.speedMultiplier += 4;
+    this.enemySpawnRate += 4;
     this.lamp.setVelocityX(-150);
     this.player.setGravity(0,300);
     this.invincibleTimer = this.time.addEvent({
       delay: 8000, timeScale: 1.0
     });
     this.player.anims.play('jetpack', true);
+    this.jetpacksound.play();
+    this.powerupsound.play();
   }
 
-  jetpackEnd() {
-    this.playerInvincible = 0;
-    this.speedMultiplier = 1;
-    this.enemySpawnRate = 1;
+  jetpackEnd() { // Ends jetpack, resets values to normal
+    this.playerInvincible = false;
+    this.jetPackActive = false;
+    this.speedMultiplier -= 4;
+    this.enemySpawnRate -= 4;
     this.player.setGravity(0,500);
     this.jetPackMeter.clear();
     
@@ -675,7 +830,7 @@ export default class PlayGame extends Phaser.Scene {
   }
 
 
-  gameOver() {
+  gameOver() { // Initiate game over sequence and set game over timer
     this.gameOverTimer = this.time.addEvent({
       delay: 3000, timeScale: 1.0
     });
@@ -684,4 +839,174 @@ export default class PlayGame extends Phaser.Scene {
     this.isGameOver = true;
   }
   
+  startBossFight() {
+    this.sound.stopAll();
+    this.scene.pause('game-scene');
+    this.scene.run('bosscinematic-scene');
+    this.createBossHp();
+    this.bossFightOn = true;
+    this.spawnBoss();
+    this.bossCurrentPhase = 0;
+    this.bossPhaseTimer = this.time.addEvent({delay:3000, timeScale:1.0});
+    this.bossAttackTimer = this.time.addEvent({delay:500, timeScale:1.0});
+    this.bossmusic.play({loop: true});
+  }
+
+  checkBossPhase() { // Responsible for running all boss logic when fight is on
+    // Attack is attacktimer is done, changes boss phase
+    // if boss phase timer is full.
+    if(this.bossPhaseTimer.getProgress() == 1) {
+      this.bossNextPhase();
+    } else {
+      switch (this.bossCurrentPhase) {
+
+        case 0: // Attack pattern 2, call ufo
+          if (this.bossAttackTimer.getProgress() == 1) {
+            this.bossAttack2();
+          }
+          break;
+        
+        case 1: // Attack pattern 1, shoot cats
+          if (this.bossAttackTimer.getProgress() == 1) {
+            this.bossAttack1();
+          }
+        break;
+
+        case 2: // Attack pattern 2, call ufo
+          if (this.bossAttackTimer.getProgress() == 1) {
+            this.bossAttack2();
+          }
+          break;
+        
+        case 3: // Attack pattern 1, shoot cats
+          if (this.bossAttackTimer.getProgress() == 1) {
+            this.bossAttack1();
+          }
+          break;
+          
+        case 4: // Attack pattern 3, tail whip
+          if (this.bossAttackTimer.getProgress() == 1) {
+            this.bossAttack3();
+          }
+          break;
+
+        case 5: // Rest, boss vulnerable
+          this.bossRest();
+          break;
+        default: 
+          throw new Error('Unknown boss phase');
+      }
+    }
+  }
+
+  bossNextPhase() { // Go to next phase or return to phase 0 if on phase 5.
+    this.bossCurrentPhase++;
+      if (this.bossCurrentPhase > 5) {
+        // Resetting boss hitbox when returning from rest mode
+        this.catboss.body.checkCollision.right = true;
+        this.catboss.body.checkCollision.left = true;
+        this.catboss.body.checkCollision.down = true;
+        this.catboss.body.setSize(35,70, true);
+        this.bossCurrentPhase = 0;
+      }
+      // reset boss phase timer to 3 seconds
+    this.bossPhaseTimer.reset({delay:3000, timeScale:1.0});
+  }
+
+  bossAttack1() { // Attack pattern 1, shoot cats from catnnon, shoot from ufo
+    this.catboss.anims.play('bossWalk', true);
+    this.spawnCat(-100, -45, 0.5);
+    this.bossattacksound.play();
+    this.ufoShoot();
+    this.bossAttackTimer.reset({delay:550, timeScale:1.0});
+  }
+
+  bossAttack2() { // Attack pattern 2, calls ufo and shoots from ufo
+    this.catboss.anims.play('bossCallUfo', true);
+    this.catboss.anims.play('bossWalk', true);
+    this.spawnUfo();
+    this.ufoShoot();
+    this.bossAttackTimer.reset({delay:3000, timeScale:1.0});
+  }
+
+  bossAttack3() { // Attack pattern 3, tail whip.
+    this.lasersound.play();
+    this.catboss.anims.play('bossTailAttack', true);
+    this.catboss.anims.play('bossWalk', true);
+    const newProjectile = this.physics.add.sprite(BOSSPROJECTILE_KEY,0,0)
+    .setPosition(250, 120)
+    .setVelocityX(-80)
+    .setFlipX(true)
+    .setDepth(3)
+    .setSize(2,8)
+    .anims.play('bossShockwave', true);
+    this.enemiesGroup.push(newProjectile);
+    this.physics.add.collider(this.player, newProjectile, (obj1, obj2) => {
+      obj2.destroy();
+      this.loseHp();
+    });
+
+    this.bossAttackTimer.reset({delay:1000, timeScale:1.0});
+  
+  }
+
+  bossRest() { // Boss rest sequence, makes boss vulnerable to attack from above
+    if (this.bossAttackTimer.getProgress() == 1) {
+      this.newScorePopup(220, 80, 'ZZzzz...');
+      this.bossAttackTimer.reset({delay:1500, timeScale:1.0});
+    }
+    this.catboss.body.checkCollision.right = false;
+    this.catboss.body.checkCollision.left = false;
+    this.catboss.body.checkCollision.down = false;
+    this.catboss.body.setSize(10,20, true);
+    this.catboss.anims.play('bossRest', true);
+  }
+
+ spawnBoss() { 
+    this.catboss = this.physics.add.sprite(225,100, CATBOSS_KEY).setDepth(2);
+   
+    this.catboss.setPushable(false);
+    this.catboss.anims.play('bossWalk', true);
+    this.playerColliders.push(
+      this.physics.add.collider(this.player, this.catboss, 
+        (obj1, obj2) => 
+          {if (this.bossCurrentPhase == 5) {
+              this.bossNextPhase();
+              this.bossLoseHP();
+            } else (
+              this.loseHp()
+            )}
+        )
+      )
+  }
+
+  createBossHp() { // Draw and set boss hp
+    for (let i = 0; i<5; i++) {
+      this.bossHPGroup.push(this.add.image(230-this.bossHPGroup.length*5,10, BOSSHP_KEY).setDepth(2));
+    }
+  }
+
+  bossLoseHP() { // Destroy one of boss's HP and check death
+
+    // Give player 2 sec invincibility 
+    this.playerInvincible = true;
+    this.invincibleTimer = this.time.addEvent({
+      delay: 2000, timeScale: 1.0
+    })
+    // Delete 1 hp from boss
+    this.bossHPGroup.at(-1).destroy();
+    this.bossHPGroup.pop();
+    this.newScorePopup(this.player.x, this.player.y, 200);
+    this.pickupsound.play();
+    this.updateScore(200);
+    // If last hp, destroy boss and stop boss fight
+    if (this.bossHPGroup.length == 0) {
+      this.sound.stopAll();
+      this.mainmusic.play();
+      this.bossFightOn = false;
+      this.destroyAnimation(this.catboss);
+      this.updateScore(4000);
+      this.newScorePopup(140,100,4000);
+    }
+  }
 }
