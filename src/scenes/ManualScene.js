@@ -21,8 +21,8 @@ export default class ManualScene extends Phaser.Scene  {
     ];
     this.slide = 0;
     this.add.text(75,10, 'VOLI - GUIDE')
-    this.manualtext = this.add.text(20,40,'',{fontSize:'14px', wordWrap:{width:200, useAdvancedWrap:true}});
-    this.add.text(75,150, '(Press space to continue)',{fontSize:'12px'})
+    this.manualtext = this.add.text(20,30,'',{fontSize:'12px', wordWrap:{width:200, useAdvancedWrap:true}});
+    this.add.text(30,150, '(Press space to continue)',{fontSize:'12px'})
   }
   
   update() {

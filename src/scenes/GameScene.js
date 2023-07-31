@@ -461,8 +461,6 @@ export default class PlayGame extends Phaser.Scene {
         this.newScorePopup(100,30, 'Difficulty up!!', {color: 0xff0000});
       };
 
-      
-      
       // Manage popups
       this.checkScorePopups();
 
@@ -499,7 +497,7 @@ export default class PlayGame extends Phaser.Scene {
       this.scene.stop('game-scene');
       this.scene.start('gameover-scene', {score:this.score._text});
     }
-  }}
+  }};
 
   moveBackground() {
     if (this.lamp.x < 0) {
@@ -620,11 +618,11 @@ export default class PlayGame extends Phaser.Scene {
       }))
   }
 
-  spawnCat(offSetX=0, offSetY=0, offSetAngle=1) {
+  spawnCat(offSetX=0, offSetY=0, offSetAngle=0.9) {
     let yrandom = 80 + Math.random()*50;
   
     const newCat =this.physics.add.sprite(320+offSetX,145+offSetY, CAT_KEY)
-    .setVelocityX(-yrandom).setVelocityY(-yrandom * offSetAngle * this.speedMultiplier).anims.play('cat', true).setGravity(0, 60)
+    .setVelocityX(-yrandom*this.speedMultiplier).setVelocityY(-yrandom * offSetAngle).anims.play('cat', true).setGravity(0, 60)
     .setRotation(-(Math.PI/4))
     .setSize(10,10, true);
 
@@ -760,6 +758,9 @@ export default class PlayGame extends Phaser.Scene {
       this.newScorePopup(this.player.x,this.player.y,200);
       this.updateScore(200);
     }
+    let colliderIndex = this.playerColliders.findIndex(collider => collider.object1 === object);
+    this.playerColliders.at(colliderIndex).destroy();
+    this.playerColliders.splice(colliderIndex, 1);
 
     let deathSprite = this.physics.add.sprite(0,0, object.texture.key).copyPosition(object);
     object.destroy();
@@ -849,6 +850,7 @@ export default class PlayGame extends Phaser.Scene {
   }
   
   startBossFight() {
+
     this.sound.stopAll();
     this.scene.pause('game-scene');
     this.scene.run('bosscinematic-scene');
