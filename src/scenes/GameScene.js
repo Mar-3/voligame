@@ -18,6 +18,7 @@ const JETPACK_KEY = 'jetpack';
 const BIGTREAT_KEY = 'bigtreat';
 const CATBOSS_KEY = 'catboss';
 const BOSSHP_KEY = 'bosshp'
+
 const MAINMUSIC_KEY = 'mainmusic';
 const BOSSMUSIC_KEY = 'bossmusic';
 const PLAYERHITSOUND_KEY = 'playerhit';
@@ -72,11 +73,11 @@ export default class PlayGame extends Phaser.Scene {
   pickupSpawnWeights = [
     {
       pickup: 'hpup',
-      weight: 0.18
+      weight: 0.24
     },
     {
       pickup: 'jetpack',
-      weight: 0.015
+      weight: 0.005
     },
     {
       pickup: 'treat',
@@ -84,7 +85,7 @@ export default class PlayGame extends Phaser.Scene {
     },
     {
       pickup: 'bigtreat',
-      weight: 0.15
+      weight: 0.2
     },
   ]
   pickupSpawnWeightsCumulative = [];
@@ -114,6 +115,7 @@ export default class PlayGame extends Phaser.Scene {
   bossHPGroup = [];
   catboss;
   preload() {
+    this.bossFightOn = false;
     this.score = 0;
     this.speedMultiplier = 1;
   
@@ -791,7 +793,14 @@ export default class PlayGame extends Phaser.Scene {
     }
   }
 
-  jetPack() { // Initiate jetpack logic, increases speed and makes player invincible a time
+  jetPack() { // Jetpack logic, increases speed and makes player invincible a time
+    //Check if invincible already, if so, extend duration
+    if (this.playerInvincible) {
+      this.invincibleTimer = this.time.addEvent({
+        delay: 8000, timeScale: 1.0
+      });
+      return;
+    }
     this.playerInvincible = true;
     this.jetPackActive = true;
     this.speedMultiplier += 4;
@@ -929,7 +938,7 @@ export default class PlayGame extends Phaser.Scene {
     this.bossAttackTimer.reset({delay:3000, timeScale:1.0});
   }
 
-  bossAttack3() { // Attack pattern 3, tail whip.
+  bossAttack3() { // Attack pattern 3, shockwaves.
     this.lasersound.play();
     this.catboss.anims.play('bossTailAttack', true);
     this.catboss.anims.play('bossWalk', true);

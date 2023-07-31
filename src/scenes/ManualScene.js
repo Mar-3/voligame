@@ -16,7 +16,8 @@ export default class ManualScene extends Phaser.Scene  {
       'PICKUPS: Voli can collect 4 different pick ups: Dog treat (300 points), golden dog treat(1000 points), bone (extra life, 5 max), and jetpack(invincibility and super speed)',
       'ENEMIES: Game introduces Voli the dogs worst adversaries: Cyclists, Cars, Cats and UFO:s.',
       'THE KING OF CATS: Final boss of the game appears after scoring 20 000 or more points. Beating the boss awards 5000 points',
-      'ENDLESS MODE: The endless mode begins after the boss is beaten, difficulty increases as the score goes up.'
+      'ENDLESS MODE: The endless mode begins after the boss is beaten, difficulty increases as the score goes up.',
+      'CHEATS: In case you want to test the boss or jetpack without the need to actually play the game, add "?skiptoboss" or "?jetpack" to the end of your url bar and press enter.'
     ];
     this.slide = 0;
     this.add.text(75,10, 'VOLI - GUIDE')
@@ -27,7 +28,7 @@ export default class ManualScene extends Phaser.Scene  {
   update() {
     if(Phaser.Input.Keyboard.JustDown(this.cursors.space)) {
       this.slide++;
-      if (this.slide > 5) {
+      if (this.slide > 6) {
         this.scene.stop('manual-scene');
         this.scene.run('mainmenu-scene');
       }
