@@ -120,18 +120,18 @@ export default class PlayGame extends Phaser.Scene {
     this.speedMultiplier = 1;
   
     // Loading images and spritsheets
-    this.load.image(GROUND_KEY, '../assets/img/ground.png');
-    this.load.image(GROUNDBG_KEY, '../assets/img//groundbg.png');
-    this.load.image(SPRUCE_KEY, '../assets/img/spruce.png');
-    this.load.image(YARD1_KEY, '../assets/img/yard1.png');
-    this.load.image(FENCE_KEY, '../assets/img/fence.png');
-    this.load.image(LAMP_KEY, '../assets/img/lamp.png');
-    this.load.image(HP_KEY, '../assets/img/hp.png');
-    this.load.image(TREAT_KEY, '../assets/img/treat.png');
-    this.load.image(JETPACK_KEY, '../assets/img/jetpack.png');
-    this.load.image(HPUP_KEY, '../assets/img/hpUp.png');
-    this.load.image(BIGTREAT_KEY, '../assets/img/bigtreat.png');
-    this.load.image(BOSSHP_KEY, '../assets/img/bosshp.png');
+    this.load.image(GROUND_KEY, 'assets/img/ground.png');
+    this.load.image(GROUNDBG_KEY, 'assets/img//groundbg.png');
+    this.load.image(SPRUCE_KEY, 'assets/img/spruce.png');
+    this.load.image(YARD1_KEY, 'assets/img/yard1.png');
+    this.load.image(FENCE_KEY, 'assets/img/fence.png');
+    this.load.image(LAMP_KEY, 'assets/img/lamp.png');
+    this.load.image(HP_KEY, 'assets/img/hp.png');
+    this.load.image(TREAT_KEY, 'assets/img/treat.png');
+    this.load.image(JETPACK_KEY, 'assets/img/jetpack.png');
+    this.load.image(HPUP_KEY, 'assets/img/hpUp.png');
+    this.load.image(BIGTREAT_KEY, 'assets/img/bigtreat.png');
+    this.load.image(BOSSHP_KEY, 'assets/img/bosshp.png');
 
 
     this.load.spritesheet(VOLI_KEY,
@@ -166,18 +166,18 @@ export default class PlayGame extends Phaser.Scene {
           '../assets/img/bossprojectile.png',
           { frameWidth: 5, frameHeight:10});
 
-    this.load.audio(MAINMUSIC_KEY, ['../assets/audio/main-music.mp3']);
-    this.load.audio(BOSSMUSIC_KEY, ['../assets/audio/boss-music.mp3']);
-    this.load.audio(PLUCKSOUND_KEY, ['../assets/audio/pluck.mp3']);
-    this.load.audio(VICTORYSOUND_KEY, ['../assets/audio/victory.mp3']);
-    this.load.audio(DRAMATICSOUND_KEY, ['../assets/audio/dramatic.mp3']);
-    this.load.audio(PLAYERDIESOUND_KEY, ['../assets/audio/player-die.mp3']);
-    this.load.audio(PLAYERHITSOUND_KEY, ['../assets/audio/player-hit.mp3']);
-    this.load.audio(JETPACKSOUND_KEY, ['../assets/audio/jetpack.mp3']);
-    this.load.audio(PICKUPSOUND_KEY, ['../assets/audio/pickup.mp3']);
-    this.load.audio(POWERUPSOUND_KEY, ['../assets/audio/powerup.mp3']);
-    this.load.audio(BOSSATTACKSOUND_KEY, ['../assets/audio/boss-attack-1.mp3']);
-    this.load.audio(LASERSOUND_KEY, ['../assets/audio/ufo-shoot.mp3']);
+    this.load.audio(MAINMUSIC_KEY, ['assets/audio/main-music.mp3']);
+    this.load.audio(BOSSMUSIC_KEY, ['assets/audio/boss-music.mp3']);
+    this.load.audio(PLUCKSOUND_KEY, ['assets/audio/pluck.mp3']);
+    this.load.audio(VICTORYSOUND_KEY, ['assets/audio/victory.mp3']);
+    this.load.audio(DRAMATICSOUND_KEY, ['assets/audio/dramatic.mp3']);
+    this.load.audio(PLAYERDIESOUND_KEY, ['assets/audio/player-die.mp3']);
+    this.load.audio(PLAYERHITSOUND_KEY, ['assets/audio/player-hit.mp3']);
+    this.load.audio(JETPACKSOUND_KEY, ['assets/audio/jetpack.mp3']);
+    this.load.audio(PICKUPSOUND_KEY, ['assets/audio/pickup.mp3']);
+    this.load.audio(POWERUPSOUND_KEY, ['assets/audio/powerup.mp3']);
+    this.load.audio(BOSSATTACKSOUND_KEY, ['assets/audio/boss-attack-1.mp3']);
+    this.load.audio(LASERSOUND_KEY, ['assets/audio/ufo-shoot.mp3']);
   }
 
   create() {
