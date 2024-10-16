@@ -159,11 +159,11 @@ export default class PlayGame extends Phaser.Scene {
           { frameWidth: 25, frameHeight: 24});
 
         this.load.spritesheet(CATBOSS_KEY,
-          '../assets/img/catboss.png',
+          'assets/img/catboss.png',
           { frameWidth: 35, frameHeight:70});
     
         this.load.spritesheet(BOSSPROJECTILE_KEY,
-          '../assets/img/bossprojectile.png',
+          'assets/img/bossprojectile.png',
           { frameWidth: 5, frameHeight:10});
 
     this.load.audio(MAINMUSIC_KEY, ['assets/audio/main-music.mp3']);
