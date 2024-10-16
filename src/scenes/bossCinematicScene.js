@@ -19,8 +19,8 @@ export default class BossCinematic extends Phaser.Scene {
       this.load.spritesheet(BOSS_KEY,
         'assets/img/catboss.png',
         { frameWidth: 35, frameHeight:70});
-    this.load.audio('dramatic',['assets/audio/dramatic.mp3']);
-    this.load.audio('bossattack', ['assets/audio/boss-attack-1.mp3']);
+    this.load.audio('dramatic','assets/audio/dramatic.mp3');
+    this.load.audio('bossattack', 'assets/audio/boss-attack-1.mp3');
   }
 
   create() {
