@@ -14,7 +14,7 @@ export default class GameOver extends Phaser.Scene {
   }
   
   preload() {
-    this.load.audio('gameoversound', ['../assets/audio/game-over.mp3']);
+    this.load.audio('gameoversound', ['assets/audio/game-over.mp3']);
   }
   create() {
     this.cursors = this.input.keyboard.createCursorKeys();
